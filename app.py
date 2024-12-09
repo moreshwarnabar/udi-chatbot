@@ -38,7 +38,7 @@ def generate_response(conversation_history, query):
     return response['output']['text']
 
 # Streamlit Interface with Custom Layout and Styling
-image_path = 'assets/asu.png'  # Path to the logo/image
+image_path = 'assets/ASU.png'  # Path to the logo/image
 
 col1, mid, col2 = st.columns([1, 1, 12])
 with col1:
