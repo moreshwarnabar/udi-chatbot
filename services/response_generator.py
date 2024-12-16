@@ -1,9 +1,8 @@
-from services.aws_client import get_bedrock_client
+from services.aws_client import get_bedrock_runtime_client
+from utils.constants import REGION, MODEL_ARN, KNOWLEDGE_BASE_ID
 
 def generate_response(conversation_history, query):
-    region = 'us-east-1'
-    bedrock_agent_client = get_bedrock_client(region)
-    model_arn = 'arn:aws:bedrock:us-east-1:992382716564:inference-profile/us.meta.llama3-1-8b-instruct-v1:0'
+    bedrock_agent_client = get_bedrock_runtime_client(REGION)
 
     context = "\n".join(
         [f"{msg['role'].capitalize()}:{msg['content']}" for msg in conversation_history]
@@ -25,8 +24,8 @@ def generate_response(conversation_history, query):
         retrieveAndGenerateConfiguration={
             'type': 'KNOWLEDGE_BASE',
             'knowledgeBaseConfiguration': {
-                'knowledgeBaseId': 'DOZZ9VZFCM',
-                'modelArn': model_arn
+                'knowledgeBaseId': KNOWLEDGE_BASE_ID,
+                'modelArn': MODEL_ARN
             }
         }
     )
