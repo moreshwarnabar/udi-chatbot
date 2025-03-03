@@ -1,0 +1,5 @@
+S3_BUCKET_NAME = 'udi-docs'
+DATA_SOURCE_ID = 'URCTFQITVD'
+KNOWLEDGE_BASE_ID = 'DOZZ9VZFCM'
+REGION = 'us-east-1'
+MODEL_ARN = 'arn:aws:bedrock:us-east-1:992382716564:inference-profile/us.meta.llama3-1-8b-instruct-v1:0'

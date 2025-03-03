@@ -1,37 +1,71 @@
 # UDI Chatbot
 
-A Streamlit-based chatbot for the University Design Institute (UDI), utilizing Retrieval-Augmented Generation (RAG) with OpenAI models and ChromaDB for document retrieval.
+## Overview
+
+UDI Chatbot is a Streamlit-based application designed to facilitate interactive conversations while leveraging AWS Bedrock for response generation. The chatbot supports document uploads, allowing users to index and retrieve knowledge from uploaded files.
 
 ## Features
-- Loads and processes PDFs for knowledge retrieval
--	Uses ChromaDB for vector storage and similarity-based retrieval
--	Generates responses using OpenAI’s GPT model
--	Interactive UI built with Streamlit
+
+- Streamlit UI for an intuitive chat experience
+- File upload functionality for document-based knowledge retrieval
+- AWS Bedrock integration for AI-generated responses
+- Chat history management
+- S3 storage for document uploads
+- Automated knowledge base synchronization
 
 ## Installation
-1. Clone the repository:
-```bash
-git clone 
+
+### Prerequisites
+
+- Python 3.8+
+- AWS credentials configured for Bedrock and S3 access
+- Required dependencies (see `requirements.txt`)
+
+### Setup
+
+```sh
+git clone <repo-url>
 cd moreshwarnabar-udi-chatbot
-```
-2. Create a virtual environment (optional but recommended):
-```bash
+
 python -m venv venv
-source venv/bin/activate  # On Windows, use venv\Scripts\activate
-```
-3. Install dependencies:
-```bash
+source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+
 pip install -r requirements.txt
+
+streamlit run app.py
+```
+
+## Project Structure
+
+```sh
+moreshwarnabar-udi-chatbot/
+├── app.py                   # Main Streamlit application
+├── requirements.txt          # Required dependencies
+├── assets/                   # UI-related assets
+├── services/                 # Backend services
+│   ├── aws_client.py         # AWS client setup
+│   ├── document_upload.py    # Document upload and processing
+│   └── response_generator.py # AI response generation
+├── utils/                    # Utility functions
+│   ├── chat_helpers.py       # Conversation formatting helpers
+│   ├── constants.py          # Application constants
+│   └── layout.py             # UI layout utilities
 ```
 
 ## Usage
-1. Ensure you have the required PDF documents in the data/ directory.
-2. Run the chatbot:
-```bash
-streamlit run chat.py
-```
-3. Interact with the chatbot through the Streamlit interface.
 
-License
+1. Start the application.
+2. Upload documents (PDF, TXT, DOCX) via the sidebar.
+3. Engage in a chat with the bot to retrieve knowledge from uploaded documents.
+4. The chatbot will provide AI-generated responses using AWS Bedrock.
 
-This project is licensed under MIT License.
+## AWS Configuration
+
+Ensure that you have AWS credentials configured and permissions granted for:
+
+- Amazon S3 (for document storage)
+- AWS Bedrock (for AI-powered responses)
+
+## License
+
+This project is licensed under the MIT License.
