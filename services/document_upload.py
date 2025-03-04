@@ -3,7 +3,7 @@ import tempfile
 
 from utils.constants import S3_BUCKET_NAME, DATA_SOURCE_ID, KNOWLEDGE_BASE_ID
 
-def upload_to_s3(s3_client, uploaded_file):
+def upload_to_s3(s3_client, uploaded_file, metadata):
     """
     Uploads a document to the specified S3 bucket.
     """
@@ -17,7 +17,7 @@ def upload_to_s3(s3_client, uploaded_file):
         s3_key = uploaded_file.name
 
         # Upload file to S3
-        s3_client.upload_file(temp_path, S3_BUCKET_NAME, s3_key)
+        s3_client.upload_file(temp_path, S3_BUCKET_NAME, s3_key, ExtraArgs=metadata)
         print(f"Uploaded {uploaded_file.name} to S3 bucket {S3_BUCKET_NAME} with key {s3_key}")
 
         # Clean up temporary file
@@ -42,12 +42,11 @@ def trigger_knowledge_base_sync(bedrock_client):
         print(f"Error triggering knowledge base sync: {e}")
         return False
 
-def process_document(bedrock_client, s3_client, uploaded_file):
+def process_document(bedrock_client, s3_client, uploaded_file, metadata):
     """
     Handles the end-to-end process: upload to S3 and trigger knowledge base sync.
     """
-    # s3_key = upload_to_s3(s3_client, uploaded_file)
-    s3_key = True
+    s3_key = upload_to_s3(s3_client, uploaded_file, metadata)
     if s3_key:
         sync_status = trigger_knowledge_base_sync(bedrock_client)
         return sync_status
