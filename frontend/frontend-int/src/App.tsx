@@ -28,14 +28,18 @@ const App = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-svh">
-      <ChatWindow messages={messages} />
-      <ChatInput
-        input={input}
-        onChangeHandler={e => setInput(e.target.value)}
-        onClickHandler={handleSendMessage}
-      />
-      <UploadFile file={file} fileUploadHandler={handleFileUpload} />
+    <div className="flex h-screen p-4 gap-4">
+      <div className="w-1/4 p-4 border-r">
+        <UploadFile file={file} fileUploadHandler={handleFileUpload} />
+      </div>
+      <div className="w-3/4 flex flex-col">
+        <ChatWindow messages={messages} />
+        <ChatInput
+          input={input}
+          onChangeHandler={e => setInput(e.target.value)}
+          onClickHandler={handleSendMessage}
+        />
+      </div>
     </div>
   );
 };
