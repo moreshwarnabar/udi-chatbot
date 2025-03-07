@@ -3,6 +3,7 @@ import { Message } from './types';
 import ChatWindow from './components/ChatWindow';
 import ChatInput from './components/ChatInput';
 import UploadFile from './components/UploadFile';
+import PastChats from './components/PastChats';
 
 const App = () => {
   const [messages, setMessages] = useState<Message[]>([
@@ -31,6 +32,7 @@ const App = () => {
     <div className="flex h-screen p-4 gap-4">
       <div className="w-1/4 p-4 border-r">
         <UploadFile file={file} fileUploadHandler={handleFileUpload} />
+        <PastChats />
       </div>
       <div className="w-3/4 flex flex-col">
         <ChatWindow messages={messages} />
