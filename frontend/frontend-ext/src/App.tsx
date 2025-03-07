@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { MessageSquare, X } from 'lucide-react';
+import OpenChatButton from './components/OpenChatButton';
+import ChatWindow from './components/ChatWindow';
 
 const App = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,27 +8,9 @@ const App = () => {
   return (
     <div className="fixed bottom-4 right-4">
       {!isOpen ? (
-        <button
-          className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition"
-          onClick={() => setIsOpen(true)}
-        >
-          <MessageSquare size={24} />
-        </button>
+        <OpenChatButton onClick={() => setIsOpen(true)} />
       ) : (
-        <div className="w-80 h-96 bg-white shadow-xl rounded-lg flex flex-col">
-          <div>
-            <span>Chatbot</span>
-            <button onClick={() => setIsOpen(false)}>
-              <X size={20} />
-            </button>
-          </div>
-          <div>
-            <p>Hello! How can I help you?</p>
-          </div>
-          <div>
-            <input type="text" placeholder="Type your message..." />
-          </div>
-        </div>
+        <ChatWindow onClose={() => setIsOpen(false)} />
       )}
     </div>
   );
