@@ -1,9 +1,22 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Message } from '@/types';
+import ChatInput from '@/components/ChatInput';
 
-const ChatWindow = ({ messages }: { messages: Message[] }) => {
+interface ChatWindowProps {
+  messages: Message[];
+  input: string;
+  inputHandler: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  sendMessageHandler: () => void;
+}
+
+const ChatWindow = ({
+  messages,
+  input,
+  inputHandler,
+  sendMessageHandler,
+}: ChatWindowProps) => {
   return (
-    <Card className="flex-1 overflow-auto pt-4 border rounded-lg">
+    <Card className="flex-1 justify-between overflow-auto pt-4 border rounded-lg">
       <CardContent>
         {messages.map((msg, idx) => (
           <div
@@ -18,6 +31,11 @@ const ChatWindow = ({ messages }: { messages: Message[] }) => {
           </div>
         ))}
       </CardContent>
+      <ChatInput
+        input={input}
+        onChangeHandler={inputHandler}
+        onClickHandler={sendMessageHandler}
+      />
     </Card>
   );
 };

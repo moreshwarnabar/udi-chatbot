@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Message } from './types';
 import ChatWindow from './components/ChatWindow';
-import ChatInput from './components/ChatInput';
 import UploadFile from './components/UploadFile';
 import PastChats from './components/PastChats';
 import Navbar from './components/Navbar';
@@ -50,11 +49,11 @@ const App = () => {
             <PastChats />
           </div>
           <div className="w-3/4 flex flex-col shadow-lg rounded-xl p-4">
-            <ChatWindow messages={messages} />
-            <ChatInput
+            <ChatWindow
+              messages={messages}
               input={input}
-              onChangeHandler={e => setInput(e.target.value)}
-              onClickHandler={handleSendMessage}
+              inputHandler={e => setInput(e.target.value)}
+              sendMessageHandler={handleSendMessage}
             />
           </div>
         </main>

@@ -14,7 +14,7 @@ const ChatInput = ({
   onClickHandler,
 }: ChatInputProps) => {
   return (
-    <div className="flex gap-2 mt-4">
+    <div className="flex gap-4 mx-4">
       <Input
         type="text"
         placeholder="Ask a question..."
