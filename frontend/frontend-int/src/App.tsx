@@ -30,11 +30,11 @@ const App = () => {
 
   return (
     <div className="flex h-screen p-4 gap-4">
-      <div className="w-1/4 p-4 border-r">
+      <div className="w-1/4 p-4 border shadow-lg rounded-xl">
         <UploadFile file={file} fileUploadHandler={handleFileUpload} />
         <PastChats />
       </div>
-      <div className="w-3/4 flex flex-col">
+      <div className="w-3/4 flex flex-col shadow-lg rounded-xl p-4">
         <ChatWindow messages={messages} />
         <ChatInput
           input={input}

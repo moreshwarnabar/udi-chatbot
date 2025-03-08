@@ -9,8 +9,10 @@ interface UploadFileProps {
 const UploadFile = ({ file, fileUploadHandler }: UploadFileProps) => {
   return (
     <>
-      <h2 className="text-lg font-semibold m-2">Upload Documents</h2>
-      <div className="flex flex-col items-center gap-2">
+      <h2 className="text-lg font-semibold mb-4 text-blue-400">
+        Upload Documents
+      </h2>
+      <div className="flex flex-col items-center gap-4">
         <Input
           type="file"
           onChange={fileUploadHandler}
@@ -19,11 +21,11 @@ const UploadFile = ({ file, fileUploadHandler }: UploadFileProps) => {
         />
         <label
           htmlFor="file-upload"
-          className="flex items-center gap-2 cursor-pointer"
+          className="flex items-center gap-2 cursor-pointer p-3 border rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition"
         >
           <Upload /> Upload Document
         </label>
-        {file && <span className="text-sm text-gray-500">{file.name}</span>}
+        {file && <span className="text-sm text-blue-600">{file.name}</span>}
       </div>
     </>
   );
