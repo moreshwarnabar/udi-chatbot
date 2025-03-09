@@ -1,4 +1,5 @@
 import os
+import json
 import boto3
 from dotenv import load_dotenv
 from src.retriever import retrieve_data
@@ -9,11 +10,19 @@ region = os.getenv('AWS_REGION')
 bedrock_runtime_client = boto3.client('bedrock-agent-runtime', region_name=region)
 
 def lambda_handler(event, context):
+    body = json.loads(event['body'])
+
+    query = body.get('query')
+    msg_history = body.get('msgHistory')
+    session_id = body.get('sessionId')
+
+    response = retrieve_data(bedrock_runtime_client, msg_history, query)
 
     return {
         'statusCode': 200,
-        'body': 'Hello from Lambda!'
+        'body': {
+            'retrievedData': response,
+            'query': query,
+            'sessionId': session_id
+        }
     }
-
-response = retrieve_data(bedrock_runtime_client, [], "What are the UDI design imperatives?")
-print(response)
