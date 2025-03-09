@@ -2,7 +2,7 @@
 ARG FUNCTION_DIR="/function"
 ARG RUNTIME_VERSION="3.10"
 
-FROM python:${RUNTIME_VERSION} as build-image
+FROM python:${RUNTIME_VERSION} AS build-image
 
 # Include global arg in this stage of the build
 ARG FUNCTION_DIR
