@@ -9,3 +9,15 @@ generation_task:
     is unavailable. If it is the latter, the response should include alternative ways for the customer to seek
     assistance.
   agent: generator
+
+formatting_task:
+  description: >
+    Format the customer support representative's response to ensure it is clear, concise, and well-structured
+    for easy readability. Use bullet points, line breaks, and appropriate punctuation to improve readability.
+    Ensure the response remains professional and is easy for the customer to understand.
+    Remove information that does not directly answer the customer's query: {query}
+  expected_output: >
+    A well-structured, clear, and concise response that is easy for the customer to understand.
+    Uses formatting elements like bullet points, or spacing where necessary.
+    Retains the original meaning without adding information.
+  agent: formatter

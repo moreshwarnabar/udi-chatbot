@@ -15,10 +15,24 @@ class GeneratorCrew():
             verbose=True
         )
     
+    @agent
+    def formatter(self, model:str = 'groq/llama-3.3-70b-versatile') -> Agent:
+        return Agent(
+            config=self.agents_config['formatter'],
+            llm=LLM(model=model),
+            verbose=True
+        )
+    
     @task
     def generator_task(self) -> Task:
         return Task(
             config=self.tasks_config['generation_task']
+        )
+    
+    @task
+    def formatting_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['formatting_task']
         )
     
     @crew
