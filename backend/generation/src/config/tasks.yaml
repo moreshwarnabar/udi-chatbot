@@ -1,10 +1,11 @@
 generation_task:
   description: >
-    Provide a concise response to the user's query - {query}, 
-    using only the provided knowledge - {context}.
-    If the provided knowledge is not sufficient to answer the user's query,
-    acknowledge that you do not have sufficient information to answer the user's query,
-    and ask the user to either rephrase their question or to contact customer support.
+    Respond to the customer's query: {query}
+    Utilize the following context to inform your response:\n\n{context}
+    If the context is insufficient, politely ask the customer for clarification
+    or suggest alternative support channels.
   expected_output: >
-    A brief and concise response that directly answers the user's query in a customer-friendly manner.
+    A short, direct and professional response, no more than 5 sentences, that either answers the customer's query or informs them that sufficient information
+    is unavailable. If it is the latter, the response should include alternative ways for the customer to seek
+    assistance.
   agent: generator
