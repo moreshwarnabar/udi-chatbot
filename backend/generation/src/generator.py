@@ -1,11 +1,17 @@
-from crewai import Agent, Task, Crew
-from crewai.project import agent, task, crew
+from crewai import Agent, Task, Crew, LLM
+from crewai.project import CrewBase,agent, task, crew, before_kickoff
 
+@CrewBase
 class GeneratorCrew():
+
+    agents_config = "config/agents.yaml"
+    tasks_config = "config/tasks.yaml"
+
     @agent
-    def generator(self) -> Agent:
+    def generator(self, model:str = 'groq/llama-3.3-70b-versatile') -> Agent:
         return Agent(
             config=self.agents_config['generator'],
+            llm=LLM(model=model),
             verbose=True
         )
     
@@ -16,9 +22,9 @@ class GeneratorCrew():
         )
     
     @crew
-    def generator_crew(self) -> Crew:
+    def crew(self) -> Crew:
         return Crew(
-            agent=self.agents,
-            task=self.tasks,
+            agents=self.agents,
+            tasks=self.tasks,
             verbose=True
         )
