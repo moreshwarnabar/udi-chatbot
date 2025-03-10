@@ -1,0 +1,10 @@
+generation_task:
+  description: >
+    Analyze the user's query - {query}, 
+    and respond based on the provided knowledge - {knowledge}.
+    If the provided knowledge is not sufficient to answer the user's query,
+    acknowledge that you do not have sufficient information to answer the user's query,
+    and ask the user to either rephrase their question or to contact customer support.
+  expected_output: >
+    A concise and accurate response delivered in a customer-friendly manner.
+  agent: generator
