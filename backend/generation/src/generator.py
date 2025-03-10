@@ -7,20 +7,23 @@ class GeneratorCrew():
     agents_config = "config/agents.yaml"
     tasks_config = "config/tasks.yaml"
 
+    def __init__(self, model:str = 'groq/llama-3.3-70b-versatile'):
+        self.model = model
+
     @agent
-    def generator(self, model:str = 'groq/llama-3.3-70b-versatile') -> Agent:
+    def generator(self) -> Agent:
         return Agent(
             config=self.agents_config['generator'],
-            llm=LLM(model=model),
-            verbose=True
+            llm=LLM(model=self.model),
+            verbose=False
         )
     
     @agent
-    def formatter(self, model:str = 'groq/llama-3.3-70b-versatile') -> Agent:
+    def formatter(self) -> Agent:
         return Agent(
             config=self.agents_config['formatter'],
-            llm=LLM(model=model),
-            verbose=True
+            llm=LLM(model=self.model),
+            verbose=False
         )
     
     @task
@@ -40,5 +43,5 @@ class GeneratorCrew():
         return Crew(
             agents=self.agents,
             tasks=self.tasks,
-            verbose=True
+            verbose=False
         )
