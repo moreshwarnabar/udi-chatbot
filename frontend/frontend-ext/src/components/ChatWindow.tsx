@@ -13,11 +13,22 @@ interface Message {
 }
 
 const ChatWindow = ({ onClose }: ChatWindowProps) => {
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'system', content: 'Hello! How can I help you?' },
-  ]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const storedMsgs = localStorage.getItem('udiChatMessages');
+    return storedMsgs
+      ? JSON.parse(storedMsgs)
+      : [{ role: 'system', content: 'Hello! How can I help you?' }];
+  });
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    localStorage.setItem('udiChatMessages', JSON.stringify(messages));
+  }, [messages]);
 
   const handleSendMessage = async (message: string) => {
     setMessages(prev => [...prev, { role: 'user', content: message }]);
@@ -52,10 +63,6 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       console.error('Error:', error);
     }
   };
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
 
   return (
     <div className="w-120 h-128 bg-gray-100 shadow-xl rounded-lg flex flex-col">
