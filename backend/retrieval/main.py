@@ -39,5 +39,5 @@ def lambda_handler(event, context):
         'headers': {
             'Content-Type': 'application/json'
         },
-        'body': json.dumps(response)
+        'body': response['Payload'].read().decode('utf-8')
     }
