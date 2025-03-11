@@ -1,52 +1,41 @@
-from crewai import Agent, Task, Crew, LLM
-from crewai.project import CrewBase,agent, task, crew, before_kickoff
-from pydantic import BaseModel
+import os
+from dotenv import load_dotenv
+from langchain_groq import ChatGroq
+from langchain_core.prompts import ChatPromptTemplate
 
-@CrewBase
-class GeneratorCrew():
+load_dotenv()
 
-    agents_config = "config/agents.yaml"
-    tasks_config = "config/tasks.yaml"
+class GeneratorAgent():
+    def __init__(self, model: str = "llama-3.3-70b-versatile") -> None:
+        self.llm = ChatGroq(model=model)
+        self.generator_prompt = ChatPromptTemplate.from_messages([
+            ("system", (
+                "You are a seasoned Customer Support Representative. "
+                "You answer customer queries in a live-chat environment. "
+                "Answer the following query based on the provided context. "
+                "Context: {context} "
+                "If the context is insufficient, ask for clarification or "
+                "suggest alternative support channels. "
+                "Your response should be short, concise, and professional. "
+            )),
+            ("user", "Query: {query}")
+        ])
+        self.formatter_prompt = ChatPromptTemplate.from_messages([
+            ("system", (
+                "You are a seasoned Support Quality Assurance Specialist. "
+                "You check the response from the customer support representative "
+                "to ensure it is short, direct, and professional. "
+                "Ensure the response is clear, concise, and well-structured. "
+                "Query: {query} "
+                "Format it with markdown syntax for easy readability using bullet points "
+                "or spacing where necessary. "
+            )),
+            ("user", "Response: {response}")
+        ])
 
-    def __init__(self, model:str = 'groq/llama-3.3-70b-versatile'):
-        self.model = model
+    def generate_response(self, query: str, context: str) -> str:
+        response = self.llm.invoke(
+            self.generator_prompt.format(query=query, context=context)
+        )
 
-    @agent
-    def generator(self) -> Agent:
-        return Agent(
-            config=self.agents_config['generator'],
-            llm=LLM(model=self.model),
-            verbose=False
-        )
-    
-    @agent
-    def formatter(self) -> Agent:
-        return Agent(
-            config=self.agents_config['formatter'],
-            llm=LLM(model=self.model),
-            verbose=False
-        )
-    
-    @task
-    def generator_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['generation_task']
-        )
-    
-    @task
-    def formatting_task(self) -> Task:
-        return Task(
-            config=self.tasks_config['formatting_task'],
-            output_pydantic=Response
-        )
-    
-    @crew
-    def crew(self) -> Crew:
-        return Crew(
-            agents=self.agents,
-            tasks=self.tasks,
-            verbose=False
-        )
-    
-class Response(BaseModel):
-    text: str
+        return response.content

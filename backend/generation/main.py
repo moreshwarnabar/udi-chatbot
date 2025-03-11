@@ -1,7 +1,7 @@
 import os
 import json
 from dotenv import load_dotenv
-from src.generator import GeneratorCrew
+from src.generator import GeneratorAgent
 
 load_dotenv()
 
@@ -17,15 +17,8 @@ def lambda_handler(event, context):
         [item['content']['text'] for item in retrieved_data]
     )
 
-    inputs = {
-        "context": context,
-        "query": query
-    }
-
-    crew = GeneratorCrew()
-    reply = crew.crew().kickoff(inputs=inputs).pydantic.text
-
-    print(f"REPLY: {reply}")
+    agent = GeneratorAgent()
+    reply: str = agent.generate_response(query, context)
 
     msg_history.extend([
         {'role': 'user', 'content': query},
