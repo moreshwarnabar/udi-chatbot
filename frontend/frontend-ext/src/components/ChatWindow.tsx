@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
 
@@ -16,15 +17,38 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     { role: 'system', content: 'Hello! How can I help you?' },
   ]);
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
     setMessages(prev => [...prev, { role: 'user', content: message }]);
 
-    setTimeout(() => {
+    try {
+      const response = await fetch(
+        'https://1r0lw223rc.execute-api.us-east-1.amazonaws.com/dev/retrieve',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            query: message,
+            msgHistory: messages,
+            sessionId: 1,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('API request failed');
+      }
+
+      const data = await response.json();
+      console.log(data);
       setMessages(prev => [
         ...prev,
-        { role: 'system', content: "I'm a chatbot. I'm here to help you!" },
+        { role: 'system', content: data.body.response },
       ]);
-    }, 1000);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (
@@ -32,7 +56,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       <ChatHeader onClose={onClose} />
       <div className="flex-1 p-3 overflow-y-auto space-y-2">
         {messages.map((msg, idx) => (
-          <p
+          <div
             key={idx}
             className={`text-sm p-2 max-w-[75%] rounded-lg ${
               msg.role === 'user'
@@ -40,8 +64,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
                 : 'bg-gray-200 text-black self-start'
             }`}
           >
-            {msg.content}
-          </p>
+            <ReactMarkdown>{msg.content}</ReactMarkdown>
+          </div>
         ))}
       </div>
       <ChatInput onSendMessage={handleSendMessage} />
