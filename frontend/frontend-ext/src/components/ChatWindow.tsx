@@ -19,6 +19,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       ? JSON.parse(storedMsgs)
       : [{ role: 'system', content: 'Hello! How can I help you?' }];
   });
+  const [isFetching, setIsFetching] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -32,6 +33,7 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
 
   const handleSendMessage = async (message: string) => {
     setMessages(prev => [...prev, { role: 'user', content: message }]);
+    setIsFetching(true);
 
     try {
       const response = await fetch(
@@ -61,6 +63,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       ]);
     } catch (error) {
       console.error('Error:', error);
+    } finally {
+      setIsFetching(false);
     }
   };
 
@@ -92,6 +96,13 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
             </ReactMarkdown>
           </div>
         ))}
+        {isFetching && (
+          <div className="flex items-center space-x-1">
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-150" />
+            <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce delay-300" />
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
       <ChatInput onSendMessage={handleSendMessage} />
