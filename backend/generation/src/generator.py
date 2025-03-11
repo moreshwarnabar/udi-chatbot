@@ -1,5 +1,6 @@
 from crewai import Agent, Task, Crew, LLM
 from crewai.project import CrewBase,agent, task, crew, before_kickoff
+from pydantic import BaseModel
 
 @CrewBase
 class GeneratorCrew():
@@ -35,7 +36,8 @@ class GeneratorCrew():
     @task
     def formatting_task(self) -> Task:
         return Task(
-            config=self.tasks_config['formatting_task']
+            config=self.tasks_config['formatting_task'],
+            output_pydantic=Response
         )
     
     @crew
@@ -45,3 +47,6 @@ class GeneratorCrew():
             tasks=self.tasks,
             verbose=False
         )
+    
+class Response(BaseModel):
+    text: str

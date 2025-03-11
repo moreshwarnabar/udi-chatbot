@@ -6,9 +6,9 @@ from src.generator import GeneratorCrew
 load_dotenv()
 
 def lambda_handler(event, context):
-    body = json.loads(event['body'])
+    body = event['body']\
 
-    retrieved_data = body.get('retrieved_data')
+    retrieved_data = body.get('retrievedData')
     query = body.get('query')
     msg_history = body.get('msgHistory')
     session_id = body.get('sessionId')
@@ -23,15 +23,17 @@ def lambda_handler(event, context):
     }
 
     crew = GeneratorCrew()
-    response = crew.kickoff(inputs=inputs)
+    reply = crew.crew().kickoff(inputs=inputs).pydantic.text
 
-    msg_history.append(
+    print(f"REPLY: {reply}")
+
+    msg_history.extend([
         {'role': 'user', 'content': query},
-        {'role': 'system', 'content': response}
-    )
+        {'role': 'system', 'content': reply}
+    ])
 
     payload = {
-        "response": response,
+        "response": reply,
         "msgHistory": msg_history,
         "sessionId": session_id
     }
@@ -41,5 +43,5 @@ def lambda_handler(event, context):
         "headers": {
             "Content-Type": "application/json"
         },
-        "body": json.dumps(payload)
+        "body": payload
     }
