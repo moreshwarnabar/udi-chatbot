@@ -17,7 +17,7 @@ const ChatInput = ({ onSendMessage }: ChatInputProps) => {
   return (
     <div className="p-2 border-t flex">
       <input
-        className="w-full p-2 border rounded"
+        className="w-full p-2 border rounded outline-none focus:ring-0 focus:border-gray-300"
         type="text"
         placeholder="Type your message..."
         value={message}
