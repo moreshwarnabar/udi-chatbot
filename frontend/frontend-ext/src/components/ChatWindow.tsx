@@ -79,9 +79,7 @@ const ChatWindow = ({ messages, onClose, updateMessages }: ChatWindowProps) => {
             >
               <ReactMarkdown
                 components={{
-                  p: ({ children }) => (
-                    <p className="max-w-[300px]">{children}</p>
-                  ),
+                  p: ({ children }) => <p>{children}</p>,
                   ul: ({ children }) => (
                     <ul className="list-disc pl-5">{children}</ul>
                   ),
