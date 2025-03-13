@@ -2,23 +2,16 @@ import { useState, useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import ChatHeader from './ChatHeader';
 import ChatInput from './ChatInput';
+import { Message } from '../types';
+import { formatReply } from '../utils/helpers';
 
 interface ChatWindowProps {
+  messages: Message[];
   onClose: () => void;
+  updateMessages: (message: string, role: 'system' | 'user') => void;
 }
 
-interface Message {
-  role: 'system' | 'user';
-  content: string;
-}
-
-const ChatWindow = ({ onClose }: ChatWindowProps) => {
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const storedMsgs = localStorage.getItem('udiChatMessages');
-    return storedMsgs
-      ? JSON.parse(storedMsgs)
-      : [{ role: 'system', content: 'Hello! How can I help you?' }];
-  });
+const ChatWindow = ({ messages, onClose, updateMessages }: ChatWindowProps) => {
   const [isFetching, setIsFetching] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
@@ -27,12 +20,8 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  useEffect(() => {
-    localStorage.setItem('udiChatMessages', JSON.stringify(messages));
-  }, [messages]);
-
   const handleSendMessage = async (message: string) => {
-    setMessages(prev => [...prev, { role: 'user', content: message }]);
+    updateMessages(message, 'user');
     setIsFetching(true);
 
     try {
@@ -56,11 +45,13 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
       }
 
       const data = await response.json();
-      console.log(data.body.response);
-      setMessages(prev => [
-        ...prev,
-        { role: 'system', content: data.body.response },
-      ]);
+      const body = JSON.parse(data.body);
+      const content = JSON.parse(body.response);
+      console.log(content);
+
+      const reply = formatReply(content);
+      console.log(reply);
+      updateMessages(reply, 'system');
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -75,25 +66,34 @@ const ChatWindow = ({ onClose }: ChatWindowProps) => {
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`text-sm p-2 max-w-[75%] w-fit rounded-lg ${
-              msg.role === 'user'
-                ? 'bg-blue-600 text-white text-right self-end ml-auto'
-                : 'bg-gray-200 text-black self-start'
+            className={`flex w-full ${
+              msg.role === 'user' ? 'justify-end' : 'justify-start'
             }`}
           >
-            <ReactMarkdown
-              components={{
-                ul: ({ children }) => (
-                  <ul className="list-disc pl-5">{children}</ul>
-                ),
-                ol: ({ children }) => (
-                  <ol className="list-decimal pl-5">{children}</ol>
-                ),
-                li: ({ children }) => <li className="pl-2">{children}</li>,
-              }}
+            <div
+              className={`text-sm p-2 max-w-[75%] w-fit rounded-lg ${
+                msg.role === 'user'
+                  ? 'bg-blue-600 text-white self-end'
+                  : 'bg-gray-200 text-black self-start'
+              }`}
             >
-              {msg.content}
-            </ReactMarkdown>
+              <ReactMarkdown
+                components={{
+                  p: ({ children }) => (
+                    <p className="max-w-[300px]">{children}</p>
+                  ),
+                  ul: ({ children }) => (
+                    <ul className="list-disc pl-5">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal pl-5">{children}</ol>
+                  ),
+                  li: ({ children }) => <li className="pl-2">{children}</li>,
+                }}
+              >
+                {msg.content}
+              </ReactMarkdown>
+            </div>
           </div>
         ))}
         {isFetching && (
