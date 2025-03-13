@@ -103,7 +103,7 @@ const ChatWindow = ({ messages, onClose, updateMessages }: ChatWindowProps) => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <ChatInput onSendMessage={handleSendMessage} />
+      <ChatInput isFetching={isFetching} onSendMessage={handleSendMessage} />
     </div>
   );
 };

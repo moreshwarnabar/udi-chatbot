@@ -1,10 +1,11 @@
 import { useState } from 'react';
 
 interface ChatInputProps {
+  isFetching: boolean;
   onSendMessage: (message: string) => void;
 }
 
-const ChatInput = ({ onSendMessage }: ChatInputProps) => {
+const ChatInput = ({ isFetching, onSendMessage }: ChatInputProps) => {
   const [message, setMessage] = useState('');
 
   const handleMessage = () => {
@@ -19,7 +20,10 @@ const ChatInput = ({ onSendMessage }: ChatInputProps) => {
       <input
         className="w-full p-2 border rounded outline-none focus:ring-0 focus:border-gray-300"
         type="text"
-        placeholder="Type your message..."
+        placeholder={
+          isFetching ? 'Crafting your answer...' : 'Type your message...'
+        }
+        disabled={isFetching}
         value={message}
         onChange={e => setMessage(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && handleMessage()}
