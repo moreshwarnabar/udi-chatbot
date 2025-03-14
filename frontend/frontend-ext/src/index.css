@@ -1,1 +1,8 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-asu_maroon: #8c1d40;
+  --color-asu_gold: #ffc627;
+  --color-asu_blue: #00a3e0;
+  --color-asu_gray: #747474;
+}
