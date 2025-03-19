@@ -33,7 +33,7 @@ const Toolbar = () => {
     >
       {isOpen === 'NONE' ? (
         <div className="flex flex-col items-center gap-4">
-          <Wrench />
+          <Wrench size={32} />
           <div className="flex flex-col items-center bg-gray-100">
             {tools.map(t => (
               <button

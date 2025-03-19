@@ -1,32 +1,55 @@
+import { useState, JSX } from 'react';
+import { MoveLeft, Upload, Trash, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { MoveLeft, Upload, Trash, X } from 'lucide-react';
-import { useState } from 'react';
+import { categories, tags } from '@/utils/data';
+import { FileUploadForm } from '@/types';
+import { validateFileUploadForm } from '@/utils/validation';
+import { uploadFile } from '@/utils/apiCalls';
 
 interface UploadFileProps {
   onClose: () => void;
 }
 
 const UploadFile = ({ onClose }: UploadFileProps) => {
-  const [file, setFile] = useState<File | null>(null);
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [form, setForm] = useState<FileUploadForm>({
+    file: null,
+    category: null,
+    tags: [],
+  });
+  const [error, setError] = useState<string | null>(null);
+  const [isUploadedMessage, setIsUploadedMessage] =
+    useState<JSX.Element | null>(null);
   const [filteredTags, setFilteredTags] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const categories = ['Policy', 'Project'];
-  const tags = [
-    'phillipines',
-    'africa',
-    'planetary health',
-    'colab',
-    'research',
-    'digital learning',
-    'funders',
-  ];
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFile(e.target.files[0]);
+    const error = validateFileUploadForm(form);
+    if (error) {
+      setError(error);
+      return;
+    }
+
+    try {
+      const response = await uploadFile(form);
+      console.log(response);
+      setIsUploadedMessage(
+        <p className="text-green-500">File uploaded successfully</p>
+      );
+    } catch (error) {
+      console.error(error);
+      setIsUploadedMessage(
+        <p className="text-red-500">Failed to upload file</p>
+      );
+    } finally {
+      setForm({
+        file: null,
+        category: null,
+        tags: [],
+      });
+      setError(null);
     }
   };
 
@@ -43,11 +66,13 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
           <MoveLeft size={28} />
         </button>
       </div>
-      <form action="" className="w-full flex flex-col gap-4">
+      <form className="w-full flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="w-full flex justify-start items-center gap-4">
           <Input
             type="file"
-            onChange={handleFileUpload}
+            onChange={e =>
+              setForm({ ...form, file: e.target.files?.[0] ?? null })
+            }
             className="hidden"
             id="file-upload"
           />
@@ -57,12 +82,12 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
           >
             <Upload />
           </label>
-          {file && (
+          {form.file && (
             <div className="flex-1 flex justify-between items-center gap-2 bg-gray-300 px-3 py-3 rounded-lg">
-              <span className="text-blue-600">{file.name}</span>
+              <span className="text-blue-600">{form.file.name}</span>
               <button
                 className="hover:text-asu_maroon hover:cursor-pointer"
-                onClick={() => setFile(null)}
+                onClick={() => setForm({ ...form, file: null })}
               >
                 <Trash />
               </button>
@@ -79,6 +104,8 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                   type="radio"
                   id={c}
                   name="category"
+                  checked={form.category === c}
+                  onChange={() => setForm({ ...form, category: c })}
                 />
                 <label htmlFor={c}>{c}</label>
               </div>
@@ -88,7 +115,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
         <div>
           <p className="font-semibold mb-2">Tags</p>
           <div className="flex flex-wrap gap-2">
-            {selectedTags.map((tag, i) => (
+            {form.tags.map((tag, i) => (
               <div
                 key={i}
                 className="flex items-center gap-1 px-2 py-1 bg-asu_maroon text-white rounded-lg"
@@ -97,7 +124,7 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                 <button
                   type="button"
                   onClick={() =>
-                    setSelectedTags(tags => tags.filter(t => t !== tag))
+                    setForm({ ...form, tags: form.tags.filter(t => t !== tag) })
                   }
                   className="hover:text-asu_gold hover:cursor-pointer"
                 >
@@ -128,13 +155,19 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
                   <div
                     key={i}
                     className={`p-2 hover:bg-gray-100 cursor-pointer ${
-                      selectedTags.includes(tag) ? 'bg-gray-100' : ''
+                      form.tags.includes(tag) ? 'bg-gray-100' : ''
                     }`}
                     onClick={() => {
-                      if (selectedTags.includes(tag)) {
-                        setSelectedTags(tags => tags.filter(t => t !== tag));
+                      if (form.tags.includes(tag)) {
+                        setForm({
+                          ...form,
+                          tags: form.tags.filter(t => t !== tag),
+                        });
                       } else {
-                        setSelectedTags(tags => [...tags, tag]);
+                        setForm({
+                          ...form,
+                          tags: [...form.tags, tag],
+                        });
                       }
                       setSearchTerm('');
                       setFilteredTags([]);
@@ -156,6 +189,8 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
           </Button>
         </div>
       </form>
+      {error && <p className="text-red-500">{error}</p>}
+      {isUploadedMessage}
     </div>
   );
 };
