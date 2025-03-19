@@ -16,9 +16,9 @@ const ChatInput = ({ isFetching, onSendMessage }: ChatInputProps) => {
   };
 
   return (
-    <div className="p-2 border-t flex">
+    <div className="p-2 flex bg-gray-100">
       <input
-        className="w-full p-2 border rounded outline-none focus:ring-0 focus:border-gray-300"
+        className="w-full px-3 py-2 border rounded-3xl outline-none focus:ring-0 focus:border-gray-300"
         type="text"
         placeholder={
           isFetching ? 'Crafting your answer...' : 'Type your message...'

@@ -60,7 +60,7 @@ const ChatWindow = ({ messages, onClose, updateMessages }: ChatWindowProps) => {
   };
 
   return (
-    <div className="w-120 h-128 bg-gray-100 shadow-xl rounded-lg flex flex-col">
+    <div className="w-100 h-128 bg-white shadow-2xl rounded-lg flex flex-col">
       <ChatHeader onClose={onClose} />
       <div className="flex-1 p-3 overflow-y-auto space-y-2 max-h-[calc(100%-80px)]">
         {messages.map((msg, idx) => (
@@ -73,7 +73,7 @@ const ChatWindow = ({ messages, onClose, updateMessages }: ChatWindowProps) => {
             <div
               className={`text-sm p-2 max-w-[75%] w-fit rounded-lg ${
                 msg.role === 'user'
-                  ? 'bg-blue-600 text-white self-end'
+                  ? 'bg-asu_blue text-white self-end'
                   : 'bg-gray-200 text-black self-start'
               }`}
             >
