@@ -1,0 +1,67 @@
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Python virtual environment
+venv/
+env/
+ENV/
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# AWS credentials and config
+.aws/
+aws.config
+aws.credentials
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Local development
+.env
+.env.local
+*.log
+
+# Test files
+tests/
+test/
+*.test.js
+*.spec.js
+coverage/
+.coverage
+htmlcov/
+
+# Documentation
+docs/
+*.md
+LICENSE
+README.md
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Docker specific
+Dockerfile
+.dockerignore
+docker-compose*
+
+# Development tools
+*.devcontainer
+.devcontainer/ 
