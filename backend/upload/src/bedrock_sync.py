@@ -266,7 +266,7 @@ class BedrockKnowledgeBase:
             return {
                 'status': 'success',
                 'job_id': job_id,
-                'started_at': response['ingestionJob']['startTime']
+                'started_at': response['ingestionJob']['startedAt']
             }
             
         except Exception as e:
@@ -303,7 +303,7 @@ class BedrockKnowledgeBase:
             job_status = response['ingestionJob']
             status_info = {
                 'status': job_status['status'],
-                'started_at': job_status['startTime'],
+                'started_at': job_status['startedAt'],
                 'completed_at': job_status.get('completionTime'),
                 'error_message': job_status.get('errorMessage')
             }

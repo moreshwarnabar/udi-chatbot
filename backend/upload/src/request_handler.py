@@ -21,7 +21,7 @@ class RequestHandler:
             response = self.kb_sync.sync_knowledge_base()
             return True, {
                 "message": "Knowledge base sync triggered successfully",
-                "jobId": response['ingestionJob']['ingestionJobId']
+                "jobId": response['job_id']
             }
         except Exception as e:
             logger.error(f"Error triggering knowledge base sync: {str(e)}")
