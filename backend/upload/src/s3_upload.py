@@ -13,6 +13,9 @@ class S3Uploader:
         self.bucket_name = os.getenv('AWS_BUCKET_NAME')
         self.region = os.getenv('AWS_REGION', 'us-east-1')
 
+        if not all([self.region, self.bucket_name]):
+            raise ValueError("Missing required environment variables")
+
         self.s3_client = boto3.client(
             's3',
             region_name=self.region
