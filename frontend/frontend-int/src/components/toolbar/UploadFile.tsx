@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { categories, tags } from '@/utils/data';
 import { FileUploadForm } from '@/types';
 import { validateFileUploadForm } from '@/utils/validation';
-import { uploadFile } from '@/utils/apiCalls';
+import { getPresignedUrl } from '@/utils/apiCalls';
 
 interface UploadFileProps {
   onClose: () => void;
@@ -33,8 +33,8 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
     }
 
     try {
-      const response = await uploadFile(validatedForm);
-      console.log(response);
+      const url = await getPresignedUrl(validatedForm);
+      console.log(url);
       setIsUploadedMessage(
         <p className="text-green-500">File uploaded successfully</p>
       );

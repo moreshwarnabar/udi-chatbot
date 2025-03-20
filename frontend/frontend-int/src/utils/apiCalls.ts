@@ -23,15 +23,19 @@ const getFileType = (file: File): string => {
     : 'application/octet-stream';
 };
 
-export const uploadFile = async (form: ValidatedFileUploadForm) => {
+export const getPresignedUrl = async (formData: ValidatedFileUploadForm) => {
   const url =
     'https://1r0lw223rc.execute-api.us-east-1.amazonaws.com/dev/presignedUrl';
   const headers = {
     'Content-Type': 'application/json',
   };
   const body = {
-    filename: form.file.name,
-    fileType: getFileType(form.file),
+    filename: formData.file.name,
+    fileType: getFileType(formData.file),
+    metadata: {
+      category: formData.category,
+      tags: JSON.stringify(formData.tags),
+    },
   };
 
   const response = await fetch(url, {
@@ -50,4 +54,36 @@ export const uploadFile = async (form: ValidatedFileUploadForm) => {
   }
 
   return data['url'];
+};
+
+export const uploadFileToS3 = async (url: string, file: File) => {
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': file.type,
+        'x-amz-acl': 'private',
+        'Cache-Control': 'no-cache',
+      },
+      body: file,
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Failed to upload file to S3: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    if (response.status !== 200) {
+      throw new Error(`Unexpected response status: ${response.status}`);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`S3 upload failed: ${error.message}`);
+    }
+    throw new Error('S3 upload failed with unknown error');
+  }
 };
