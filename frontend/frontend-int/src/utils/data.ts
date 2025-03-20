@@ -7,4 +7,5 @@ export const tags = [
   'research',
   'digital learning',
   'funders',
+  'accelerator',
 ];

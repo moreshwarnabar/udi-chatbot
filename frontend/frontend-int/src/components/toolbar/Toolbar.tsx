@@ -38,7 +38,7 @@ const Toolbar = () => {
             {tools.map(t => (
               <button
                 className="p-4 border border-gray-200 text-asu_maroon hover:text-asu_gold hover:cursor-pointer"
-                id={t.id}
+                key={t.id}
                 onClick={t.onClick}
               >
                 {t.icon}

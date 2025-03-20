@@ -13,3 +13,9 @@ export interface FileUploadForm {
   category: Category | null;
   tags: Tag[];
 }
+
+export interface ValidatedFileUploadForm {
+  file: File;
+  category: Category;
+  tags: Tag[];
+}

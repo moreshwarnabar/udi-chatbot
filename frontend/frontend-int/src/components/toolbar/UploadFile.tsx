@@ -26,14 +26,14 @@ const UploadFile = ({ onClose }: UploadFileProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const error = validateFileUploadForm(form);
-    if (error) {
-      setError(error);
+    const validatedForm = validateFileUploadForm(form);
+    if (typeof validatedForm === 'string') {
+      setError(validatedForm);
       return;
     }
 
     try {
-      const response = await uploadFile(form);
+      const response = await uploadFile(validatedForm);
       console.log(response);
       setIsUploadedMessage(
         <p className="text-green-500">File uploaded successfully</p>
