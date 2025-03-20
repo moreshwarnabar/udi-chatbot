@@ -9,15 +9,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     """
-    AWS Lambda handler function that processes file upload requests from API Gateway.
-    
-    Expected request format:
-    {
-        "filename": "example.pdf",
-        "fileContent": "base64_encoded_content",
-        "category": "documents",
-        "tags": ["important", "2024", "contract"]
-    }
+    AWS Lambda handler function that triggers Bedrock knowledge base synchronization.
     
     Args:
         event (dict): The event data passed to the Lambda function
@@ -27,18 +19,12 @@ def lambda_handler(event, context):
         dict: Response containing statusCode and body
     """
     try:
-        logger.info("Received file upload request")
-        
-        # Parse the request body
-        if 'body' not in event:
-            return APIResponse.error("No body found in the request", 400)
-            
-        body = json.loads(event['body']) if isinstance(event['body'], str) else event['body']
+        logger.info("Received knowledge base sync request")
         
         # Process the request
         handler = RequestHandler()
         try:
-            success, result = handler.process_upload_request(body)
+            success, result = handler.trigger_kb_sync()
             return APIResponse.success(result)
         except ValueError as ve:
             return APIResponse.error(str(ve), 400)
